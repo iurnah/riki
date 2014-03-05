@@ -1,0 +1,21 @@
+As Deefour says, your situation isn't much unlike the one in How to change a
+remote repository URI using Git?. When you clone a repository, it is added as a
+remote of yours, under the name origin. What you need to do now (as you're not
+using the old source anymore) is change origin's URL:
+
+$ git remote set-url origin http://github.com/YOU/YOUR_REPO
+If the original repository would update often and you want to get those updates
+from time to time, then instead of editing origin it would be best to add a new
+remote:
+
+$ git remote add personal http://github.com/YOU/YOUR_REPO
+Or maybe even call the old one upstream:
+
+$ git remote rename origin upstream
+$ git remote add origin http://github.com/YOU/YOUR_REPO
+Then, whenever you want to get changes from upstream, you can do:
+
+$ git fetch upstream
+As this the source is a sample repository (seems to be kind of a template to
+start off), I don't think there's a need to keep it nor fork it at all - I'll go
+with the first alternative here.
