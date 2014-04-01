@@ -1,1 +1,0 @@
-link: https://help.github.com/articles/duplicating-a-repository
