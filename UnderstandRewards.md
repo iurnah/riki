@@ -7,7 +7,7 @@ in debug mode ``../../../ia32/bin/pinbin -pause_tool 10 -t ./REWARDS -- $*``, in
 
 This comes down to how the ``./REWARDS`` implemented.
 
-## *Makefile* and Makefile.rules
+## *Makefile* and __Makefile.rules__
 
 	#Makefile
 	ifdef PIN_ROOT
@@ -20,7 +20,7 @@ This comes down to how the ``./REWARDS`` implemented.
 	include $(TOOLS_ROOT)/Config/makefile.default.rules
 	include makefile.rules
 
-### *Makefile.rules
+### *Makefile.rules*
 
 The contents are mainly about how to config pin-tools and the command to compile REWARDS is only one line.
 
