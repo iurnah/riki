@@ -88,5 +88,6 @@ _myFunc ENDP
 END
 ```
 
-
+##References:
+[x86 Assembly Guide](http://www.cs.virginia.edu/~evans/cs216/guides/x86.html)
 
