@@ -7,7 +7,7 @@ showcase. Yes, showcase.
 
 DFRWS 2005 Forensics Challenge
 ===
----------------------------------------------
+
 Report & Answers by Chris Betz
 ---
 It recovered strings and process names across the two dump file. the results is a list of PID, process name, and process path on disk. It found several suspectable processes [dfrws2005](#), [UMGR32(BO2K)](#), and [nc.exe](#). Hacker Defender used to hook selected Windows API calls.
