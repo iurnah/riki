@@ -1,4 +1,4 @@
-Calling Convention (C Language calling convention)
+Calling Convention (C Language)
 ===
 ## Caller rules
 
