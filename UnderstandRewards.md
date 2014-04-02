@@ -7,7 +7,7 @@ in debug mode ``../../../ia32/bin/pinbin -pause_tool 10 -t ./REWARDS -- $*``, in
 
 This comes down to how the ``./REWARDS`` implemented.
 
-## *Makefile* and Makefile.rules
+## *Makefile* and _Makefile.rules_
 
 	#Makefile
 	ifdef PIN_ROOT
@@ -20,11 +20,11 @@ This comes down to how the ``./REWARDS`` implemented.
 	include $(TOOLS_ROOT)/Config/makefile.default.rules
 	include makefile.rules
 
-### *Makefile.rules
+### *Makefile.rules*
 
 The contents are mainly about how to config pin-tools and the command to compile REWARDS is only one line.
 
-## *rewards.cpp*
+## *rewards.h*
 
 The file is a modification of files provided by pin. The background about how pin can instrument instruction is necessary to understand the code. The following function may related to the core of REWARDS.
 
@@ -53,6 +53,72 @@ VOID SysAfter(THREADID tid, ADDRINT ip, ADDRINT ret, ADDRINT num, ADDRINT arg0, 
 VOID SysBefore(THREADID tid, ADDRINT ip, ADDRINT num, ADDRINT arg0, ADDRINT arg1, ADDRINT arg2, ADDRINT arg3, ADDRINT arg4, ADDRINT arg5);
 void DumpSpace(FILE *fp);
 ```
+
+## *rewards.cpp*
+
+This file is a tool that generate instruction trace with values, it also including some debugging functionality. The main function is as following:
+
+	PIN_InitSymbols();
+
+	if (PIN_Init(argc, argv)) {
+		return Usage();
+	}
+
+	for (int i = 0; i < argc; i++) {
+		if (!strcmp(argv[i], "--")) {
+			strcpy(ImageName, ParseImageName(argv[i + 1]));
+			break;
+		}
+	}
+
+	init_shadow_memory();
+
+	msglevel = 10;
+
+	PID = PIN_GetTid();
+
+	sprintf(filename_prefix, "%s-%d", ImageName, PID);
+
+	sprintf(temp_file_name, "mkdir %s", filename_prefix);
+	system(temp_file_name);
+
+	sprintf(temp_file_name, "%s/semantic.out", filename_prefix);
+	semantic_file = fopen(temp_file_name, "w");
+
+	sprintf(temp_file_name, "%s/syscall.out", filename_prefix);
+	syscall_file = fopen(temp_file_name, "w");
+
+	sprintf(temp_file_name, "%s/alltrace.out", filename_prefix);
+	fptrace = fopen(temp_file_name, "w");
+	control.RegisterHandler(Handler, 0, FALSE);
+	control.Activate();
+
+	TRACE_AddInstrumentFunction(Trace, 0);
+	PIN_AddContextChangeFunction(OnSig, 0);
+
+	IMG_AddInstrumentFunction(ImageLoad, 0);
+
+	INS_AddInstrumentFunction(SetupDataflow, 0);
+	setup_hook();
+
+	PIN_AddThreadStartFunction(ThreadStart, 0);
+	PIN_AddThreadFiniFunction(ThreadFini, 0);
+
+	PIN_AddSyscallEntryFunction(SyscallEntry, 0);
+	PIN_AddSyscallExitFunction(SyscallExit, 0);
+
+	filter.Activate();
+	//icount.Activate();
+
+	PIN_AddFiniFunction(Fini, 0);
+	// Never returns
+
+	sprintf(map_fname, "/proc/%d/maps", PID);
+	ProcessMapFile(map_fname);
+
+	PIN_StartProgram();
+
+	return 0;
 
 
 
