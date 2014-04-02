@@ -7,7 +7,7 @@ in debug mode ``../../../ia32/bin/pinbin -pause_tool 10 -t ./REWARDS -- $*``, in
 
 This comes down to how the ``./REWARDS`` implemented.
 
-## *Makefile* and __Makefile.rules__
+## *Makefile* and _Makefile.rules_
 
 	#Makefile
 	ifdef PIN_ROOT
