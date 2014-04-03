@@ -121,7 +121,7 @@ This file is a tool that generate instruction trace with values, it also includi
 
 ## *image_lodad.c*
 
-The function ``ParseImageName()`` calling from ``main`` is defined in this file. This file also have lots of other functions that readout memory maps like what ``init_env`` did in the s2e tools set. Functions in this file can locate the stack, heap, etc. (``ParsemapLine``) in the memory region of the particular process. For example, it decleared the following variables. 
+The function ``ParseImageName()`` calling from ``main`` is defined in this file. This file also have lots of other functions that read memory maps like what ``init_env`` did in the s2e tools set. Functions in this file can locate the stack, heap, etc. (``ParsemapLine()``) in the memory region of the particular process. For example, it decleared the following variables. 
 	
 	uint32_t bin_heap_start_addr;
 	uint32_t bin_heap_end_addr;
@@ -139,8 +139,19 @@ Other important functions defined in this file including:
 
 ## *shadow_mem.c*
 
-This file is contain the ``init_shadow_memory(void)``, which creates the shadow memory with the ``PAGE_SIZE``. ``#define PAGE_SIZE 65536``, we see the page size is 64KB.
+This file is contain the ``init_shadow_memory(void)``, which creates the shadow memory with the ``PAGE_SIZE``, which the author define ``#define PAGE_SIZE 65536``, so the page size is 64KB.
 
+## *api_hook.c*
+
+## *inst_hook.cpp*
+
+## *malloc_hook.c*
+
+## *sys_helper.c*
+
+## *sys_hook.c*
+
+## *types.c*
 
 
 
