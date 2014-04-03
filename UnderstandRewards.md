@@ -191,7 +191,7 @@ void UnionTwoTags(reg_tag_t * d, reg_tag_t * s);
 void SetEaxTagType(T_TYPE t, ADDRINT pc);
 void SetFunPointerType(ADDRINT value, reg_tag_t * src);
 void SetInputBufferTagTypes(ADDRINT addr, int size, T_TYPE tag);
-void SetArg0TagType(T_TYPE t);
+void SetArg0TagType(T_TYPE t);	
 void SetArg1TagType(T_TYPE t);
 void SetArg2TagType(T_TYPE t);
 void SetArg3TagType(T_TYPE t);
@@ -202,6 +202,10 @@ void SetMOVSBTag(VOID * ip, ADDRINT addrr, ADDRINT addrw);
 void SetMOVSWTag(VOID * ip, ADDRINT addrr, ADDRINT addrw);
 void SetMOVSDTag(VOID * ip, ADDRINT addrr, ADDRINT addrw);
 ```
+The functions with the format `SetArgXTagType()` above is actually try to match the register value with the system call arguments. The types are hard coded in the function `void ParseSyscallArgument(ADDRINT num, ADDRINT arg0, ADDRINT arg1, ADDRINT arg2, ADDRINT arg3, ADDRINT arg4, ADDRINT arg5, ADDRINT, ip)`, and thusly, type the register and so on.
+
+This moment we have much knowledge about how rewards propagate type messages. See the explanation in the **sys_hook.c** section.
+
 
 ## *rewards_helper.h*
 
@@ -236,7 +240,6 @@ TODO:read the ``VOID ImageRoutineReplace(IMG img, VOID * v)``
 
 Library implementation of the functions that can hook and mark the memory region, it is a explicit implementation of the various functions corresponds to library functions. It also implement the instrumentation routines function `` VOID ImageRoutineReplace(IMG img, VOID * v)``. It is a very big function, read it through. It is important!!!
 
-
 ## *inst_hook.cpp*
 
 There is a comment talking about how instructions are modeled and taint is propagated. Should focus on this file also. Pay attention to the Comment in the line of 149.
@@ -253,13 +256,70 @@ RTN_InsertCall(mallocRtn, IPOINT_AFTER, (AFUNPTR) MallocAfter,
 
 ## *sys_hook.c*
 
-Hook syscall table, long list of cases. 
+Declared a syscall table contain 228 syscalls, with syscall number as the key, syscall name as the value. 
+It also define the function `void ParseSyscallArgument(ADDRINT num, ADDRINT arg0, ADDRINT arg1, ADDRINT arg2, ADDRINT arg3, ADDRINT arg4, ADDRINT arg5, ADDRINT, ip)`, which is the key to tag the register type. For example, when the system hook a system call and find it is read, it goto the following case
+
+```
+...
+case 3:			//read
+	SetArg0TagType(T_FILE_FD);
+	SetArg1TagType((T_TYPE)(T_CHAR|T_PTR));
+	SetArg2TagType(T_SIZE_T);
+	break;
+...
+```
+
+Each argument to read is hard coded to the type of the read system call. The generic linux read system call is ``ssize_t read(int fd, void *buf, size_t count)``. With the ``SetArgXTagType`` function, which is implemented as following:
+
+```
+void SetArg0TagType(T_TYPE t)
+{
+	reg_tag_t tag;
+	GetRegTag(LEVEL_BASE::REG_EBX, &tag, -1);
+	resolve_reg_tag_type(&tag, t);
+}
+```
+
+in which it called ``GetRegTag`` to tag the register EBX of the instrumented register. Here is the ``GetRegTag`` implementation:
+
+```
+void GetRegTag(REG reg, reg_tag_t * reg_src, ADDRINT pc)
+{
+	if (regTagMap[(uint32_t) reg].pc == 0) {
+		fprintf(fptrace, "D 0x%08x 0x%08x\n", pc, time_stamp_g);
+		regTagMap[(uint32_t) reg].pc = pc;
+		regTagMap[(uint32_t) reg].time_stamp = time_stamp_g;
+		regTagMap[(uint32_t) reg].imm = 0;
+	}
+	(*reg_src).pc = regTagMap[(uint32_t) reg].pc;
+	(*reg_src).time_stamp = regTagMap[(uint32_t) reg].time_stamp;
+	(*reg_src).imm = regTagMap[(uint32_t) reg].imm;
+
+#ifdef DEBUG_REWARDS
+	fprintf(fptrace, "Get REG %s [ %x %x ]\n", REG_StringShort(reg).c_str(),
+		reg_src->pc, reg_src->time_stamp);
+#endif
+}
+```
+
+it also called the ``resolve_reg_tag_type`` function, which is a single line of function that print the corresponds address and type. This how reward tag registers. 
+
+**TODO: where is the backtrack algorithm implemented, i.e. how the recursive type resolve implemented is still not clear.**
 
 ## *sys_helper.c*
 
 ## *types.c*
 
-Function that resolve the data type.
+Function that resolve the data type, see `types.h`
+
+## *types.h*
+
+Declear the enum `c_program_type_t` and the following functions:
+
+	char GetTypeNameByType(T_TYPE t);
+	void ResolveStructType(T_TYPE t, unsigned int virt_addr);
+	void ResolveStructTypeArg(T_TYPE t, unsigned int esp);
+
 
 **After reading source for the first day, I guess that the implementation of typing is based on instruction taint and typing function to finally resolve the data type in memory. Of course the instrumentation is facilitated by Pin tool. which is the focus of the second day.**
 
