@@ -261,7 +261,7 @@ Hook syscall table, long list of cases.
 
 Function that resolve the data type.
 
-**After reading source for the first day, I guess that the implementation of typing is based on instruction taint and typing function to finally resolve the data type in memory. Of course the instrumentation is facilitated by Pin tool. whic is the focus of the second day.**
+**After reading source for the first day, I guess that the implementation of typing is based on instruction taint and typing function to finally resolve the data type in memory. Of course the instrumentation is facilitated by Pin tool. which is the focus of the second day.**
 
 
 
