@@ -244,10 +244,12 @@ There is a comment talking about how instructions are modeled and taint is propa
 ## *malloc_hook.c*
 
 Some of the function have not been called by Rewards, such as ``FreeBefore()``, some of them are called by ``api_hook.c`` 
-	RTN_InsertCall(mallocRtn, IPOINT_AFTER, (AFUNPTR) MallocAfter,
-		       IARG_FUNCRET_EXITPOINT_VALUE,
-		       IARG_REG_VALUE, REG_ESP, IARG_END);
 
+```
+RTN_InsertCall(mallocRtn, IPOINT_AFTER, (AFUNPTR) MallocAfter,
+	       IARG_FUNCRET_EXITPOINT_VALUE,
+	       IARG_REG_VALUE, REG_ESP, IARG_END);
+```
 
 ## *sys_hook.c*
 
@@ -259,7 +261,7 @@ Hook syscall table, long list of cases.
 
 Function that resolve the data type.
 
-__After reading source for the first day, I guess that the implementation of typing is based on instruction taint and typing function to finally resolve the data type in memory. Of course the instrumentation is facilitated by Pin tool. whic is the focus of the second day. __
+**After reading source for the first day, I guess that the implementation of typing is based on instruction taint and typing function to finally resolve the data type in memory. Of course the instrumentation is facilitated by Pin tool. whic is the focus of the second day.**
 
 
 
