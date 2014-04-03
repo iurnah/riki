@@ -139,19 +139,127 @@ Other important functions defined in this file including:
 
 ## *shadow_mem.c*
 
-This file is contain the ``init_shadow_memory(void)``, which creates the shadow memory with the ``PAGE_SIZE``, which the author define ``#define PAGE_SIZE 65536``, so the page size is 64KB.
+This file is contain the ``init_shadow_memory(void)``, which creates the shadow memory with the ``PAGE_SIZE``, which the author define ``#define PAGE_SIZE 65536``, so the page size is 64KB. 
+
+This file also definded the following functions:
+
+	alloc_secondary_map()
+	get_mem_ins_addr()
+	set_mem_ins_addr()
+	get_mem_time_stamp()
+	set_men_time_stamp()
+	set_mem_shadow_tag()
+	get_mem_shadow_tag()
+
+Try to relate those functio to the discussion of how REWARDS backtrack algorithm maintain different set 
+of typed and untyped memory region.
+
+## *rewards_helper.cpp*
+
+This file define some of the functions that have extensively called by ``xxx_hook.c``. Those function doing the taging for the memory. For example, function ``void SetRegTag(REG reg, reg_tag_t * reg_src)`` set the register tags. The structure defined as 
+
+```
+typedef struct _reg_reg_tag_t {
+	uint32_t pc;
+	uint32_t time_stamp;
+	uint32_t imm;
+} reg_tag_t;
+```
+
+Other functions defined:
+
+```
+void resolve_reg_tag_type(reg_tag_t * t, T_TYPE tt);
+void resolve_mem_tag_type(mem_tag_t * t, T_TYPE tt);
+void resolve_arg_tag_type(ADDRINT addr, mem_tag_t * t, T_TYPE tt);
+void UpdateTimeStamp();
+void GetRegTag(REG reg, reg_tag_t * reg_src, ADDRINT pc);
+void SetRegTag(REG reg, reg_tag_t * reg_src);
+void MovRegToReg(REG reg, reg_tag_t * reg_src);
+void MovMemToReg(REG reg, reg_tag_t * reg_src);
+void MovImmToReg(REG reg, ADDRINT imm, ADDRINT pc);
+void GetMemTag(ADDRINT addr, ADDRINT size, reg_tag_t * reg_src, ADDRINT pc);
+void SetPushRegTag(ADDRINT addr, REG reg, reg_tag_t * reg_src, ADDRINT pc);
+void SetPushImmTag(ADDRINT addr, ADDRINT imm, ADDRINT pc);
+void SetPushMemTag(ADDRINT addr, reg_tag_t * reg_src, ADDRINT pc);
+void SetMemTag(ADDRINT addr, ADDRINT size, mem_tag_t * reg_src, ADDRINT pc);
+void MovRegToMem(ADDRINT addr, ADDRINT size, reg_tag_t * reg_src, ADDRINT pc);
+void MovMemToMem(ADDRINT addr, ADDRINT size, reg_tag_t * reg_src, ADDRINT pc);
+void MovImmToMem(ADDRINT addr, ADDRINT size, ADDRINT imm, ADDRINT pc);
+void SetLeaAddr(ADDRINT ip, ADDRINT val2, REG reg);
+void UnionTwoTags(reg_tag_t * d, reg_tag_t * s);
+void SetEaxTagType(T_TYPE t, ADDRINT pc);
+void SetFunPointerType(ADDRINT value, reg_tag_t * src);
+void SetInputBufferTagTypes(ADDRINT addr, int size, T_TYPE tag);
+void SetArg0TagType(T_TYPE t);
+void SetArg1TagType(T_TYPE t);
+void SetArg2TagType(T_TYPE t);
+void SetArg3TagType(T_TYPE t);
+void SetArg4TagType(T_TYPE t);
+void SetArg5TagType(T_TYPE t);
+void CheckPushEBP(VOID * ip, REG reg, ADDRINT val, ADDRINT esp);
+void SetMOVSBTag(VOID * ip, ADDRINT addrr, ADDRINT addrw);
+void SetMOVSWTag(VOID * ip, ADDRINT addrr, ADDRINT addrw);
+void SetMOVSDTag(VOID * ip, ADDRINT addrr, ADDRINT addrw);
+```
+
+## *rewards_helper.h*
+
+Other than the above mentioned functions decleared for ``rewards_helper.cpp``, it also define functions for ``api_hook.c``. They are 
+
+```
+VOID RetOneMalloc(ADDRINT eip, ADDRINT eax);
+VOID RetOneChar(ADDRINT eip, ADDRINT eax);
+VOID RetOneStr(ADDRINT eip, ADDRINT eax);
+VOID RetOneWchar(ADDRINT eip, ADDRINT eax);
+VOID RetOneFD(ADDRINT eip, ADDRINT eax);
+VOID RetOneFile(ADDRINT eip, ADDRINT eax);
+VOID RetOneInt(ADDRINT eip, ADDRINT eax);
+VOID RetOnePID(ADDRINT eip, ADDRINT eax);
+VOID RetOnePointerChar(ADDRINT eip, ADDRINT eax);
+VOID RetOnePointerInt(ADDRINT eip, ADDRINT eax);
+VOID RetOnePointerVoid(ADDRINT eip, ADDRINT eax);
+VOID RetOneAddrinfo(ADDRINT eip, ADDRINT eax);
+VOID RetOneUtsname(ADDRINT eip, ADDRINT eax);
+VOID RetOneTime(ADDRINT eip, ADDRINT eax);
+VOID RetOneTimeb(ADDRINT eip, ADDRINT eax);
+VOID RetOneTm(ADDRINT eip, ADDRINT eax);
+VOID RetOneSize(ADDRINT eip, ADDRINT eax);
+VOID RetOneFpos(ADDRINT eip, ADDRINT eax);
+VOID RetOneOff(ADDRINT eip, ADDRINT eax);
+VOID RetOneVoid(ADDRINT eip, ADDRINT eax);
+```
 
 ## *api_hook.c*
 
+TODO:read the ``VOID ImageRoutineReplace(IMG img, VOID * v)``
+
+Library implementation of the functions that can hook and mark the memory region, it is a explicit implementation of the various functions corresponds to library functions. It also implement the instrumentation routines function `` VOID ImageRoutineReplace(IMG img, VOID * v)``. It is a very big function, read it through. It is important!!!
+
+
 ## *inst_hook.cpp*
+
+There is a comment talking about how instructions are modeled and taint is propagated. Should focus on this file also. Pay attention to the Comment in the line of 149.
 
 ## *malloc_hook.c*
 
+Some of the function have not been called by Rewards, such as ``FreeBefore()``, some of them are called by ``api_hook.c`` 
+	RTN_InsertCall(mallocRtn, IPOINT_AFTER, (AFUNPTR) MallocAfter,
+		       IARG_FUNCRET_EXITPOINT_VALUE,
+		       IARG_REG_VALUE, REG_ESP, IARG_END);
+
+
 ## *sys_hook.c*
+
+Hook syscall table, long list of cases. 
 
 ## *sys_helper.c*
 
 ## *types.c*
+
+Function that resolve the data type.
+
+__After reading source for the first day, I guess that the implementation of typing is based on instruction taint and typing function to finally resolve the data type in memory. Of course the instrumentation is facilitated by Pin tool. whic is the focus of the second day. __
 
 
 
