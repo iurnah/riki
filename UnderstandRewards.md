@@ -147,9 +147,9 @@ This file is contain the ``init_shadow_memory(void)``, which creates the shadow 
 
 ## *malloc_hook.c*
 
-## *sys_helper.c*
-
 ## *sys_hook.c*
+
+## *sys_helper.c*
 
 ## *types.c*
 
