@@ -323,7 +323,7 @@ Declear the enum `c_program_type_t` and the following functions:
 
 **After reading source for the first day, I guess that the implementation of typing is based on instruction taint and typing function to finally resolve the data type in memory. Of course the instrumentation is facilitated by Pin tool. which is the focus of the second day.**
 
-How Pin worked in Rewards [Slide]
+How Pin worked in Rewards [Slides](http://www.ckluk.org/ck/talks/pin_pldi05.ppt)
 ===
 
 ## Architecture
@@ -340,8 +340,13 @@ It handle instructions that can't be directly executed(e.g., syscalls)
 
 Store compiled code
 
-**Trace linking technique? Wjat's this?**
+**Trace linking technique? What's this?**
 
-Pin's register Re-allocation, the original source code would be compiled as a new program (can think as trace or instrumented program) to execute.
+Pin's register Re-allocation, the original source code would be compiled as a trace program (can think as trace or instrumented program) to execute. What Pin essentially doing is to having the following binding for the original code and the generated trace. 
 
-[slides](http://www.ckluk.org/ck/talks/pin_pldi05.ppt)
+| Virtual | Physical |
+|:---------:|:----------:|
+| %eax | %eax |
+| _%ebx_ | **%esi** |
+| %ecx | %ecx |
+| %edx | %edx |
