@@ -332,6 +332,8 @@ How Pin worked in Rewards [Slides](http://www.ckluk.org/ck/talks/pin_pldi05.ppt)
 
 ### JIT Compiler:
 
+Dynamically compile and instrument
+
 ### Emulation Unit:
 
 It handle instructions that can't be directly executed(e.g., syscalls)
@@ -340,13 +342,20 @@ It handle instructions that can't be directly executed(e.g., syscalls)
 
 Store compiled code
 
-**Trace linking technique? What's this?**
-
 Pin's register Re-allocation, the original source code would be compiled as a trace program (can think as trace or instrumented program) to execute. What Pin essentially doing is to having the following binding for the original code and the generated trace. 
 
 | Virtual | Physical |
 |:---------:|:----------:|
 | %eax | %eax |
-| _%ebx_ | **%esi** |
+|**%ebx** | **%esi** |
 | %ecx | %ecx |
 | %edx | %edx |
+
+
+###Optimization 
+
+**Trace linking technique? What's this?**
+
+Inline + eflags Liveness Analysis + Scheduling
+
+Pin distribution has a **address tracer** and **syscall tracer**, these pin-tools might need detailed investigated.
