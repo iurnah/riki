@@ -1,8 +1,9 @@
 S2E source code
 ===
 Table of contenst:
-	- [S2E Plugin Implementation](#S2E plugin implementation)
-	- [References](#reference)
+
+- [S2E Plugin Implementation](#S2E plugin implementation)
+- [References](#reference)
 
 <a name="S2E plugin implementation"/>
 ## S2E Plugin Implementation
