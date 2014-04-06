@@ -3,7 +3,9 @@ REWARDS source code
 
 #### Table of contents
 [run.sh](#run.sh)
+[types.h](#types.h)
 
+<a name="run.sh"/>
 ## *run.sh*
 
 The script take command line options and run REWARDS either in debug mode or normal mode.
@@ -316,6 +318,8 @@ it also called the ``resolve_reg_tag_type`` function, which is a single line of 
 
 Function that resolve the data type, see `types.h`
 
+
+<a name="types.h"/>
 ## *types.h*
 
 Declear the enum `c_program_type_t` and the following functions:
