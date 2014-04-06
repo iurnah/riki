@@ -1,0 +1,11 @@
+Dynamic Analysis
+===
+
+This file contain all my notes about dynamic code analysis, including the related areas such as binary code instrumentation, annotation, dynamic tracing, and profiling, etc.
+
+- __Instrumentation__ - refers to an ability to monitor or measure the level of a product's performance, to diagnose errors and to write trace information. Programmers implement instrumentation in the form of code instructions that monitor specific components in a system (for example, instructions may output logging information to appear on screen).
+- __Code tracing__ - receiving informative messages about the execution of an application at run time.
+- __Debugging and (structured) exception handling__ - tracking down and fixing programming errors in an application under development.[2]
+- __Profiling (computer programming)__ - a means by which dynamic program behaviors can be measured during a training run with a representative input. This is useful for properties of a program which cannot be analyzed statically with sufficient precision, such as alias analysis.
+- __Performance counters__ - components that allow the tracking of the performance of the application.
+- __Computer data logging__ - components that allow the logging and tracking of major events in the execution of the application.

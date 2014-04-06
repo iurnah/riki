@@ -1,5 +1,9 @@
 REWARDS source code
 ===
+
+#### Table of contents
+[run.sh](#run.sh)
+
 ## *run.sh*
 
 The script take command line options and run REWARDS either in debug mode or normal mode.
