@@ -4,7 +4,7 @@ REWARDS source code
 #### Table of contents
 [run.sh](#run.sh)
 
-## *run.sh*
+## run.sh
 
 The script take command line options and run REWARDS either in debug mode or normal mode.
 in debug mode ``../../../ia32/bin/pinbin -pause_tool 10 -t ./REWARDS -- $*``, in normal mode: ``../../../pin -t ./REWARDS $mem $instr -- $*``.
