@@ -5,12 +5,8 @@ REWARDS source code
 [run.sh](#run.sh)
 [types.h](#types.h)
 
-<<<<<<< HEAD
 <a name="run.sh"/>
 ## *run.sh*
-=======
-## run.sh
->>>>>>> 773df7776cf896371bacc490e9927e134489015e
 
 The script take command line options and run REWARDS either in debug mode or normal mode.
 in debug mode ``../../../ia32/bin/pinbin -pause_tool 10 -t ./REWARDS -- $*``, in normal mode: ``../../../pin -t ./REWARDS $mem $instr -- $*``.
