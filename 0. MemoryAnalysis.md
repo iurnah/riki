@@ -73,6 +73,6 @@ Dump Address
 
 Reference
 ---
-[1. Wiki: Computer Forensics](#http://en.wikipedia.org/wiki/Computer_forensics)
+[1. Wiki: Computer Forensics](http://en.wikipedia.org/wiki/Computer_forensics)
 
-[2. MAC times](#http://en.wikipedia.org/wiki/MAC_times)
+[2. MAC times](http://en.wikipedia.org/wiki/MAC_times)
